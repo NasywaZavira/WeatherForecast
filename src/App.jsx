@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import AppLayout from "./components/AppLayout";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
@@ -20,11 +21,12 @@ function AppRoutes() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
+
         <Route
           path="/dashboard"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <AppLayout><Dashboard /></AppLayout>
             </ProtectedRoute>
           }
         />
@@ -32,7 +34,7 @@ function AppRoutes() {
           path="/forecast"
           element={
             <ProtectedRoute>
-              <ForecastPage />
+              <AppLayout><ForecastPage /></AppLayout>
             </ProtectedRoute>
           }
         />
@@ -40,7 +42,7 @@ function AppRoutes() {
           path="/location"
           element={
             <ProtectedRoute>
-              <LocationPage />
+              <AppLayout><LocationPage /></AppLayout>
             </ProtectedRoute>
           }
         />
@@ -48,7 +50,7 @@ function AppRoutes() {
           path="/settings"
           element={
             <ProtectedRoute>
-              <SettingsPage />
+              <AppLayout><SettingsPage /></AppLayout>
             </ProtectedRoute>
           }
         />

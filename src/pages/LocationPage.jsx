@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import ConditionIcon from "../components/ConditionIcon";
 import {
@@ -552,285 +551,276 @@ export default function LocationPage() {
   ];
 
   return (
-    <div className="flex min-h-screen" style={{ background: P.black }}>
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Topbar />
-        <main className="flex-1 overflow-hidden flex p-6 gap-5">
-          {/* ── LEFT PANEL ── */}
-          <div className="w-72 flex flex-col gap-4 overflow-y-auto shrink-0">
-            <h2
-              className="font-body font-bold text-xl"
-              style={{ color: P.light }}
+    <div className="flex-1 flex flex-col overflow-hidden">
+      <Topbar />
+      <main className="flex-1 overflow-hidden flex p-6 gap-5">
+        {/* ── LEFT PANEL ── */}
+        <div className="w-72 flex flex-col gap-4 overflow-y-auto shrink-0">
+          <h2
+            className="font-body font-bold text-xl"
+            style={{ color: P.light }}
+          >
+            Location
+          </h2>
+
+          {/* Search */}
+          <div className="relative">
+            <div
+              className="flex items-center gap-2 rounded-xl px-4 py-3"
+              style={{ background: P.card, border: `1px solid ${P.dark}44` }}
             >
-              Location
-            </h2>
-
-            {/* Search */}
-            <div className="relative">
-              <div
-                className="flex items-center gap-2 rounded-xl px-4 py-3"
-                style={{ background: P.card, border: `1px solid ${P.dark}44` }}
-              >
-                <Search size={14} style={{ color: P.mid }} />
-                <input
-                  type="text"
-                  placeholder="Search city..."
-                  value={searchQuery}
-                  onChange={(e) => handleSearch(e.target.value)}
-                  className="bg-transparent font-body text-sm outline-none flex-1"
-                  style={{ color: P.light }}
-                />
-                {searching && (
-                  <div
-                    className="w-3 h-3 rounded-full border border-t-transparent animate-spin"
-                    style={{
-                      borderColor: P.mid,
-                      borderTopColor: "transparent",
-                    }}
-                  />
-                )}
-              </div>
-
-              {/* Dropdown results */}
-              {searchResults.length > 0 && (
+              <Search size={14} style={{ color: P.mid }} />
+              <input
+                type="text"
+                placeholder="Search city..."
+                value={searchQuery}
+                onChange={(e) => handleSearch(e.target.value)}
+                className="bg-transparent font-body text-sm outline-none flex-1"
+                style={{ color: P.light }}
+              />
+              {searching && (
                 <div
-                  className="absolute top-full left-0 right-0 mt-2 rounded-xl overflow-hidden z-50 space-y-1 p-2"
+                  className="w-3 h-3 rounded-full border border-t-transparent animate-spin"
                   style={{
-                    background: P.card,
-                    border: `1px solid ${P.dark}44`,
-                    boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+                    borderColor: P.mid,
+                    borderTopColor: "transparent",
                   }}
-                >
-                  {searchResults.map((r, i) => (
-                    <SearchResultItem
-                      key={i}
-                      result={r}
-                      onAdd={handleAddLocation}
-                    />
-                  ))}
-                </div>
+                />
               )}
             </div>
 
-            {/* Saved locations */}
-            <div>
-              <p className="font-body text-xs mb-2" style={{ color: P.tan }}>
-                Saved Locations ({locations.length})
-              </p>
-              <div className="space-y-2">
-                {[...locations]
-                  .sort((a, b) => b.starred - a.starred)
-                  .map((loc) => (
-                    <LocationWeatherCard
-                      key={loc.id}
-                      loc={loc}
-                      isActive={loc.id === activeId}
-                      onClick={() => setActiveId(loc.id)}
-                      onRemove={handleRemove}
-                      onStar={handleStar}
-                    />
-                  ))}
-              </div>
-            </div>
-
-            {/* Clicked location popup */}
-            {clickWeather && (
+            {/* Dropdown results */}
+            {searchResults.length > 0 && (
               <div
-                className="rounded-xl p-4"
+                className="absolute top-full left-0 right-0 mt-2 rounded-xl overflow-hidden z-50 space-y-1 p-2"
                 style={{
-                  background: "#1a2a1a",
-                  border: `1px solid ${P.dark}55`,
+                  background: P.card,
+                  border: `1px solid ${P.dark}44`,
+                  boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
                 }}
               >
-                <div className="flex items-center justify-between mb-3">
-                  <p
-                    className="font-body text-xs font-semibold"
-                    style={{ color: P.mid }}
-                  >
-                    📍 Clicked Location
-                  </p>
-                  <button
-                    onClick={() => {
-                      setClickedCoord(null);
-                      setClickWeather(null);
-                    }}
-                  >
-                    <X size={12} style={{ color: P.tan }} />
-                  </button>
-                </div>
-                <div className="flex items-center gap-2 mb-3">
-                  <ConditionIcon type={clickWeather.icon} size={32} />
-                  <div>
-                    <p
-                      className="font-body text-sm font-semibold"
-                      style={{ color: P.light }}
-                    >
-                      {clickWeather.name}
-                      {clickWeather.country ? `, ${clickWeather.country}` : ""}
-                    </p>
-                    <p
-                      className="font-display text-xl"
-                      style={{ color: P.light }}
-                    >
-                      {clickWeather.temp}° C
-                    </p>
-                  </div>
-                </div>
-                {clickWeather.wind && (
-                  <div className="grid grid-cols-2 gap-2 mb-3">
-                    {[
-                      { icon: Wind, val: clickWeather.wind, label: "Wind" },
-                      {
-                        icon: Droplets,
-                        val: clickWeather.humidity,
-                        label: "Humidity",
-                      },
-                    ].map(({ icon: Icon, val, label }) => (
-                      <div key={label} className="flex items-center gap-1.5">
-                        <Icon size={11} style={{ color: P.mid }} />
-                        <span
-                          className="font-body text-xs"
-                          style={{ color: P.tan }}
-                        >
-                          {val}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-                <button
-                  onClick={addClickedLocation}
-                  className="w-full py-2 rounded-lg font-body text-xs font-semibold transition-all"
-                  style={{ background: P.dark, color: P.light }}
-                >
-                  + Add to Saved Locations
-                </button>
+                {searchResults.map((r, i) => (
+                  <SearchResultItem
+                    key={i}
+                    result={r}
+                    onAdd={handleAddLocation}
+                  />
+                ))}
               </div>
             )}
           </div>
 
-          {/* ── MAP ── */}
-          <div className="flex-1 flex flex-col gap-3 min-w-0">
-            {/* Map header */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <MapPin size={14} style={{ color: P.mid }} />
-                <span className="font-body text-sm" style={{ color: P.tan }}>
-                  {activeLoc
-                    ? `${activeLoc.name}, ${activeLoc.country}`
-                    : "Select a location"}
-                </span>
-              </div>
-              <span
-                className="font-body text-xs px-3 py-1 rounded-full"
-                style={{
-                  background: `${P.dark}22`,
-                  color: P.tan,
-                  border: `1px solid ${P.dark}33`,
-                }}
-              >
-                Click anywhere on map to get weather
-              </span>
+          {/* Saved locations */}
+          <div>
+            <p className="font-body text-xs mb-2" style={{ color: P.tan }}>
+              Saved Locations ({locations.length})
+            </p>
+            <div className="space-y-2">
+              {[...locations]
+                .sort((a, b) => b.starred - a.starred)
+                .map((loc) => (
+                  <LocationWeatherCard
+                    key={loc.id}
+                    loc={loc}
+                    isActive={loc.id === activeId}
+                    onClick={() => setActiveId(loc.id)}
+                    onRemove={handleRemove}
+                    onStar={handleStar}
+                  />
+                ))}
             </div>
+          </div>
 
-            {/* Map container */}
+          {/* Clicked location popup */}
+          {clickWeather && (
             <div
-              className="flex-1 rounded-2xl overflow-hidden relative min-h-0"
-              style={{ border: `1px solid ${P.dark}33` }}
+              className="rounded-xl p-4"
+              style={{
+                background: "#1a2a1a",
+                border: `1px solid ${P.dark}55`,
+              }}
             >
-              <LeafletMap
-                center={mapCenter}
-                zoom={mapZoom}
-                markers={markers}
-                onMapClick={handleMapClick}
-              />
-
-              {/* Map legend overlay */}
-              <div
-                className="absolute bottom-4 left-4 rounded-xl px-4 py-3 z-[1000]"
-                style={{
-                  background: "rgba(8,7,4,0.85)",
-                  border: `1px solid ${P.dark}44`,
-                  backdropFilter: "blur(8px)",
-                }}
-              >
-                <p className="font-body text-xs mb-2" style={{ color: P.tan }}>
-                  Legend
+              <div className="flex items-center justify-between mb-3">
+                <p
+                  className="font-body text-xs font-semibold"
+                  style={{ color: P.mid }}
+                >
+                  📍 Clicked Location
                 </p>
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="w-3 h-3 rounded-full"
-                      style={{ background: P.mid }}
-                    />
-                    <span
-                      className="font-body text-xs"
-                      style={{ color: P.tan }}
-                    >
-                      Active location
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="w-3 h-3 rounded-full"
-                      style={{
-                        background: "#1a3a1a",
-                        border: `1px solid ${P.dark}`,
-                      }}
-                    />
-                    <span
-                      className="font-body text-xs"
-                      style={{ color: P.tan }}
-                    >
-                      Saved location
-                    </span>
-                  </div>
-                </div>
+                <button
+                  onClick={() => {
+                    setClickedCoord(null);
+                    setClickWeather(null);
+                  }}
+                >
+                  <X size={12} style={{ color: P.tan }} />
+                </button>
               </div>
-            </div>
-
-            {/* Quick stats bar for active location */}
-            {activeLoc && (
-              <div
-                className="rounded-xl p-4 flex items-center gap-6"
-                style={{ background: P.card, border: `1px solid ${P.dark}33` }}
-              >
-                <div className="flex items-center gap-2">
-                  <MapPin size={13} style={{ color: P.mid }} />
-                  <span
+              <div className="flex items-center gap-2 mb-3">
+                <ConditionIcon type={clickWeather.icon} size={32} />
+                <div>
+                  <p
                     className="font-body text-sm font-semibold"
                     style={{ color: P.light }}
                   >
-                    {activeLoc.name}
-                  </span>
+                    {clickWeather.name}
+                    {clickWeather.country ? `, ${clickWeather.country}` : ""}
+                  </p>
+                  <p
+                    className="font-display text-xl"
+                    style={{ color: P.light }}
+                  >
+                    {clickWeather.temp}° C
+                  </p>
                 </div>
-                <div className="flex items-center gap-1">
-                  <Thermometer size={12} style={{ color: P.tan }} />
-                  <span className="font-body text-xs" style={{ color: P.tan }}>
-                    {activeLoc.lat.toFixed(4)}° N, {activeLoc.lon.toFixed(4)}° E
-                  </span>
-                </div>
-                <div className="flex-1" />
-                <button
-                  onClick={() => {
-                    setMapCenter([activeLoc.lat, activeLoc.lon]);
-                    setMapZoom(13);
-                  }}
-                  className="font-body text-xs px-4 py-1.5 rounded-lg transition-all"
-                  style={{
-                    background: `${P.dark}33`,
-                    color: P.mid,
-                    border: `1px solid ${P.dark}44`,
-                  }}
-                >
-                  Zoom to location
-                </button>
               </div>
-            )}
+              {clickWeather.wind && (
+                <div className="grid grid-cols-2 gap-2 mb-3">
+                  {[
+                    { icon: Wind, val: clickWeather.wind, label: "Wind" },
+                    {
+                      icon: Droplets,
+                      val: clickWeather.humidity,
+                      label: "Humidity",
+                    },
+                  ].map(({ icon: Icon, val, label }) => (
+                    <div key={label} className="flex items-center gap-1.5">
+                      <Icon size={11} style={{ color: P.mid }} />
+                      <span
+                        className="font-body text-xs"
+                        style={{ color: P.tan }}
+                      >
+                        {val}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <button
+                onClick={addClickedLocation}
+                className="w-full py-2 rounded-lg font-body text-xs font-semibold transition-all"
+                style={{ background: P.dark, color: P.light }}
+              >
+                + Add to Saved Locations
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* ── MAP ── */}
+        <div className="flex-1 flex flex-col gap-3 min-w-0">
+          {/* Map header */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <MapPin size={14} style={{ color: P.mid }} />
+              <span className="font-body text-sm" style={{ color: P.tan }}>
+                {activeLoc
+                  ? `${activeLoc.name}, ${activeLoc.country}`
+                  : "Select a location"}
+              </span>
+            </div>
+            <span
+              className="font-body text-xs px-3 py-1 rounded-full"
+              style={{
+                background: `${P.dark}22`,
+                color: P.tan,
+                border: `1px solid ${P.dark}33`,
+              }}
+            >
+              Click anywhere on map to get weather
+            </span>
           </div>
-        </main>
-      </div>
+
+          {/* Map container */}
+          <div
+            className="flex-1 rounded-2xl overflow-hidden relative min-h-0"
+            style={{ border: `1px solid ${P.dark}33` }}
+          >
+            <LeafletMap
+              center={mapCenter}
+              zoom={mapZoom}
+              markers={markers}
+              onMapClick={handleMapClick}
+            />
+
+            {/* Map legend overlay */}
+            <div
+              className="absolute bottom-4 left-4 rounded-xl px-4 py-3 z-[1000]"
+              style={{
+                background: "rgba(8,7,4,0.85)",
+                border: `1px solid ${P.dark}44`,
+                backdropFilter: "blur(8px)",
+              }}
+            >
+              <p className="font-body text-xs mb-2" style={{ color: P.tan }}>
+                Legend
+              </p>
+              <div className="flex flex-col gap-1.5">
+                <div className="flex items-center gap-2">
+                  <div
+                    className="w-3 h-3 rounded-full"
+                    style={{ background: P.mid }}
+                  />
+                  <span className="font-body text-xs" style={{ color: P.tan }}>
+                    Active location
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div
+                    className="w-3 h-3 rounded-full"
+                    style={{
+                      background: "#1a3a1a",
+                      border: `1px solid ${P.dark}`,
+                    }}
+                  />
+                  <span className="font-body text-xs" style={{ color: P.tan }}>
+                    Saved location
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick stats bar for active location */}
+          {activeLoc && (
+            <div
+              className="rounded-xl p-4 flex items-center gap-6"
+              style={{ background: P.card, border: `1px solid ${P.dark}33` }}
+            >
+              <div className="flex items-center gap-2">
+                <MapPin size={13} style={{ color: P.mid }} />
+                <span
+                  className="font-body text-sm font-semibold"
+                  style={{ color: P.light }}
+                >
+                  {activeLoc.name}
+                </span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Thermometer size={12} style={{ color: P.tan }} />
+                <span className="font-body text-xs" style={{ color: P.tan }}>
+                  {activeLoc.lat.toFixed(4)}° N, {activeLoc.lon.toFixed(4)}° E
+                </span>
+              </div>
+              <div className="flex-1" />
+              <button
+                onClick={() => {
+                  setMapCenter([activeLoc.lat, activeLoc.lon]);
+                  setMapZoom(13);
+                }}
+                className="font-body text-xs px-4 py-1.5 rounded-lg transition-all"
+                style={{
+                  background: `${P.dark}33`,
+                  color: P.mid,
+                  border: `1px solid ${P.dark}44`,
+                }}
+              >
+                Zoom to location
+              </button>
+            </div>
+          )}
+        </div>
+      </main>
     </div>
   );
 }

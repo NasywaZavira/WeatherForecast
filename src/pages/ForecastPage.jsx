@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import ConditionIcon from "../components/ConditionIcon";
 import { currentWeather, hourlyForecast } from "../data/weatherData";
@@ -157,447 +156,428 @@ export default function ForecastPage() {
   }, [selectedIdx]);
 
   return (
-    <div className="flex min-h-screen" style={{ background: P.black }}>
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Topbar />
-        <main className="flex-1 overflow-y-auto p-6 space-y-5">
-          <h2
-            className="font-body font-bold text-xl"
-            style={{ color: P.light }}
-          >
-            Forecast
-          </h2>
+    <div className="flex-1 flex flex-col overflow-hidden">
+      <Topbar />
+      <main className="flex-1 overflow-y-auto p-6 space-y-5">
+        <h2 className="font-body font-bold text-xl" style={{ color: P.light }}>
+          Forecast
+        </h2>
 
-          {/* ── Tabs ── */}
-          <div
-            className="flex w-fit rounded-xl overflow-hidden"
-            style={{ background: P.card, border: `1px solid ${P.dark}33` }}
-          >
-            {[
-              ["5-day", "5-Day Forecast"],
-              ["hourly", "Hourly Forecast"],
-            ].map(([val, label]) => (
-              <button
-                key={val}
-                onClick={() => setTab(val)}
-                className="px-8 py-2.5 font-body text-sm font-medium transition-all"
-                style={
-                  tab === val
-                    ? { background: "#1a3a1a", color: P.light }
-                    : { color: P.tan }
-                }
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-
-          {/* ── Day selector ── */}
-          <div className="flex gap-2">
-            {forecast.map((day, i) => (
-              <button
-                key={i}
-                onClick={() => setSelectedIdx(i)}
-                className="px-6 py-2 rounded-lg font-body text-sm font-medium transition-all"
-                style={
-                  selectedIdx === i
-                    ? {
-                        background: "#1a3a1a",
-                        color: P.light,
-                        border: `1px solid ${P.dark}66`,
-                      }
-                    : { color: P.tan, border: `1px solid transparent` }
-                }
-              >
-                {day.label}
-              </button>
-            ))}
-          </div>
-
-          {/* ── 5-Day detail card ── */}
-          {tab === "5-day" && (
-            <div
-              className="rounded-2xl p-6"
-              style={{ background: P.card, border: `1px solid ${P.dark}33` }}
+        {/* ── Tabs ── */}
+        <div
+          className="flex w-fit rounded-xl overflow-hidden"
+          style={{ background: P.card, border: `1px solid ${P.dark}33` }}
+        >
+          {[
+            ["5-day", "5-Day Forecast"],
+            ["hourly", "Hourly Forecast"],
+          ].map(([val, label]) => (
+            <button
+              key={val}
+              onClick={() => setTab(val)}
+              className="px-8 py-2.5 font-body text-sm font-medium transition-all"
+              style={
+                tab === val
+                  ? { background: "#1a3a1a", color: P.light }
+                  : { color: P.tan }
+              }
             >
-              {/* Date label */}
-              <p className="font-body text-xs mb-4" style={{ color: P.tan }}>
-                {selected.fullDate}
-              </p>
+              {label}
+            </button>
+          ))}
+        </div>
 
-              <div className="flex gap-8">
-                {/* Left: icon + temp */}
-                <div className="flex flex-col items-start gap-2 w-48 shrink-0">
-                  <ConditionIcon type={selected.icon} size={96} />
-                  <p
-                    className="font-display text-5xl"
-                    style={{ color: P.light }}
-                  >
-                    {selected.high}° C
-                  </p>
-                  <p
-                    className="font-body font-semibold"
-                    style={{ color: P.light }}
-                  >
-                    {selected.condition}
-                  </p>
-                  <p className="font-body text-sm" style={{ color: P.tan }}>
-                    Feels Like {selected.feelsLike}° C
-                  </p>
-
-                  {/* High / Low */}
-                  <div className="flex gap-3 mt-1">
-                    <span
-                      className="font-body text-xs px-2 py-0.5 rounded"
-                      style={{ background: `${P.dark}30`, color: P.mid }}
-                    >
-                      ↑ {selected.high}°
-                    </span>
-                    <span
-                      className="font-body text-xs px-2 py-0.5 rounded"
-                      style={{ background: `#1a3060`, color: "#7ab4f0" }}
-                    >
-                      ↓ {selected.low}°
-                    </span>
-                  </div>
-                </div>
-
-                {/* Right: stats grid */}
-                <div className="flex-1 grid grid-cols-3 gap-x-8 gap-y-5 content-start">
-                  {[
-                    { label: "Feels like", value: `${selected.feelsLike}° C` },
-                    { label: "Wind status", value: selected.wind },
-                    { label: "Rain chance", value: selected.rain },
-                    { label: "Visibility", value: selected.visibility },
-                    { label: "UV index", value: selected.uvIndex },
-                    { label: "Pressure", value: selected.pressure },
-                  ].map(({ label, value }) => (
-                    <div key={label}>
-                      <p className="font-body text-xs" style={{ color: P.tan }}>
-                        {label}
-                      </p>
-                      <p
-                        className="font-body font-semibold text-sm"
-                        style={{ color: P.light }}
-                      >
-                        {value}
-                      </p>
-                    </div>
-                  ))}
-
-                  {/* Sun arc */}
-                  <div className="col-span-3 mt-2">
-                    <div className="flex items-end justify-between px-2">
-                      <div className="text-center">
-                        <div
-                          className="w-8 h-8 rounded-full mx-auto mb-1"
-                          style={{
-                            background: `${P.mid}22`,
-                            border: `1px solid ${P.mid}66`,
-                          }}
-                        />
-                        <p
-                          className="font-body text-xs"
-                          style={{ color: P.tan }}
-                        >
-                          Sunrise
-                        </p>
-                        <p
-                          className="font-body font-semibold text-xs"
-                          style={{ color: P.light }}
-                        >
-                          {selected.sunrise}
-                        </p>
-                      </div>
-                      <div className="flex-1 mx-4 mb-4">
-                        <SunArc
-                          sunrise={selected.sunrise}
-                          sunset={selected.sunset}
-                          isToday={selectedIdx === 0}
-                        />
-                      </div>
-                      <div className="text-center">
-                        <div
-                          className="w-8 h-8 rounded-full mx-auto mb-1"
-                          style={{
-                            background: `${P.tan}22`,
-                            border: `1px solid ${P.tan}66`,
-                          }}
-                        />
-                        <p
-                          className="font-body text-xs"
-                          style={{ color: P.tan }}
-                        >
-                          Sunset
-                        </p>
-                        <p
-                          className="font-body font-semibold text-xs"
-                          style={{ color: P.light }}
-                        >
-                          {selected.sunset}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* 5-day mini strip */}
-              <div
-                className="mt-6 pt-5"
-                style={{ borderTop: `1px solid ${P.dark}33` }}
-              >
-                <p className="font-body text-xs mb-3" style={{ color: P.tan }}>
-                  5-Day Overview
-                </p>
-                <div className="flex gap-3">
-                  {forecast.map((day, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setSelectedIdx(i)}
-                      className="flex-1 flex flex-col items-center gap-1.5 py-3 rounded-xl transition-all"
-                      style={
-                        selectedIdx === i
-                          ? {
-                              background: "#1a3a1a",
-                              border: `1px solid ${P.dark}55`,
-                            }
-                          : {
-                              background: `${P.dark}11`,
-                              border: `1px solid ${P.dark}22`,
-                            }
-                      }
-                    >
-                      <p
-                        className="font-body text-xs"
-                        style={{ color: selectedIdx === i ? P.light : P.tan }}
-                      >
-                        {day.label}
-                      </p>
-                      <ConditionIcon type={day.icon} size={28} />
-                      <p
-                        className="font-body text-xs font-semibold"
-                        style={{ color: P.light }}
-                      >
-                        {day.high}°
-                      </p>
-                      <p
-                        className="font-body text-xs"
-                        style={{ color: "#7ab4f0" }}
-                      >
-                        {day.low}°
-                      </p>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ── Hourly tab ── */}
-          {tab === "hourly" && (
-            <div
-              className="rounded-2xl p-6"
-              style={{ background: P.card, border: `1px solid ${P.dark}33` }}
+        {/* ── Day selector ── */}
+        <div className="flex gap-2">
+          {forecast.map((day, i) => (
+            <button
+              key={i}
+              onClick={() => setSelectedIdx(i)}
+              className="px-6 py-2 rounded-lg font-body text-sm font-medium transition-all"
+              style={
+                selectedIdx === i
+                  ? {
+                      background: "#1a3a1a",
+                      color: P.light,
+                      border: `1px solid ${P.dark}66`,
+                    }
+                  : { color: P.tan, border: `1px solid transparent` }
+              }
             >
-              <p className="font-body text-xs mb-5" style={{ color: P.tan }}>
-                {selected.fullDate} — Hourly breakdown
-              </p>
-              <div className="grid grid-cols-6 gap-3">
-                {hourlyData.map((h) => {
-                  const now = new Date();
-                  const [hm, period] = h.time.split(" ");
-                  let hh = parseInt(hm);
-                  if (period === "PM" && hh !== 12) hh += 12;
-                  if (period === "AM" && hh === 12) hh = 0;
-                  const isCurrent =
-                    selectedIdx === 0 && Math.abs(now.getHours() - hh) < 2;
-                  return (
-                    <div
-                      key={h.time}
-                      className="flex flex-col items-center gap-2 py-4 rounded-xl"
-                      style={
-                        isCurrent
-                          ? {
-                              background: "#1a3a1a",
-                              border: `1px solid ${P.dark}66`,
-                            }
-                          : {
-                              background: `${P.dark}11`,
-                              border: `1px solid ${P.dark}22`,
-                            }
-                      }
-                    >
-                      <p
-                        className="font-body text-xs"
-                        style={{ color: isCurrent ? P.light : P.tan }}
-                      >
-                        {h.time}
-                      </p>
-                      <ConditionIcon type={h.icon} size={32} />
-                      <p
-                        className="font-body text-sm font-semibold"
-                        style={{ color: P.light }}
-                      >
-                        {h.temp}°
-                      </p>
-                    </div>
-                  );
-                })}
-              </div>
+              {day.label}
+            </button>
+          ))}
+        </div>
 
-              {/* Temperature graph */}
-              <div
-                className="mt-6 pt-5"
-                style={{ borderTop: `1px solid ${P.dark}33` }}
-              >
-                <p className="font-body text-xs mb-3" style={{ color: P.tan }}>
-                  Temperature trend
-                </p>
-                <svg viewBox="0 0 600 80" className="w-full overflow-visible">
-                  <defs>
-                    <linearGradient
-                      id="tempGrad"
-                      x1="0%"
-                      y1="0%"
-                      x2="0%"
-                      y2="100%"
-                    >
-                      <stop offset="0%" stopColor={P.mid} stopOpacity="0.3" />
-                      <stop
-                        offset="100%"
-                        stopColor={P.mid}
-                        stopOpacity="0.02"
-                      />
-                    </linearGradient>
-                  </defs>
-                  {(() => {
-                    const temps = hourlyData.map((h) => h.temp);
-                    const minT = Math.min(...temps) - 2;
-                    const maxT = Math.max(...temps) + 2;
-                    const xs = [50, 150, 250, 350, 450, 550];
-                    const ys = temps.map(
-                      (t) => 70 - ((t - minT) / (maxT - minT)) * 55,
-                    );
-                    const pts = xs.map((x, i) => `${x},${ys[i]}`).join(" ");
-                    const areaPath =
-                      `M ${xs[0]},${ys[0]} ` +
-                      xs
-                        .slice(1)
-                        .map((x, i) => `L ${x},${ys[i + 1]}`)
-                        .join(" ") +
-                      ` L ${xs[5]},76 L ${xs[0]},76 Z`;
-                    const linePath =
-                      `M ${xs[0]},${ys[0]} ` +
-                      xs
-                        .slice(1)
-                        .map((x, i) => `L ${x},${ys[i + 1]}`)
-                        .join(" ");
-                    return (
-                      <>
-                        <path d={areaPath} fill="url(#tempGrad)" />
-                        <path
-                          d={linePath}
-                          stroke={P.mid}
-                          strokeWidth="1.5"
-                          fill="none"
-                          strokeLinejoin="round"
-                        />
-                        {xs.map((x, i) => (
-                          <g key={i}>
-                            <circle
-                              cx={x}
-                              cy={ys[i]}
-                              r="3.5"
-                              fill={P.card}
-                              stroke={P.mid}
-                              strokeWidth="1.5"
-                            />
-                            <text
-                              x={x}
-                              y={ys[i] - 8}
-                              textAnchor="middle"
-                              style={{
-                                fontSize: "9px",
-                                fill: P.tan,
-                                fontFamily: "sans-serif",
-                              }}
-                            >
-                              {temps[i]}°
-                            </text>
-                          </g>
-                        ))}
-                      </>
-                    );
-                  })()}
-                </svg>
-              </div>
-            </div>
-          )}
-
-          {/* ── AQI ── */}
+        {/* ── 5-Day detail card ── */}
+        {tab === "5-day" && (
           <div
             className="rounded-2xl p-6"
             style={{ background: P.card, border: `1px solid ${P.dark}33` }}
           >
-            <p
-              className="font-body font-semibold mb-4"
-              style={{ color: P.light }}
-            >
-              Air Quality Index
+            {/* Date label */}
+            <p className="font-body text-xs mb-4" style={{ color: P.tan }}>
+              {selected.fullDate}
             </p>
-            <div className="flex items-center gap-6">
-              <div className="relative w-20 h-20 shrink-0">
-                <svg viewBox="0 0 120 120" className="w-full h-full">
-                  <circle
-                    cx="60"
-                    cy="60"
-                    r="50"
-                    fill="none"
-                    stroke="#347E3A33"
-                    strokeWidth="10"
-                  />
-                  <circle
-                    cx="60"
-                    cy="60"
-                    r="50"
-                    fill="none"
-                    stroke={P.mid}
-                    strokeWidth="10"
-                    strokeDasharray={`${(currentWeather.aqi / 150) * 314} 314`}
-                    strokeDashoffset="78"
-                    strokeLinecap="round"
-                    transform="rotate(-220 60 60)"
-                  />
-                </svg>
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
+
+            <div className="flex gap-8">
+              {/* Left: icon + temp */}
+              <div className="flex flex-col items-start gap-2 w-48 shrink-0">
+                <ConditionIcon type={selected.icon} size={96} />
+                <p className="font-display text-5xl" style={{ color: P.light }}>
+                  {selected.high}° C
+                </p>
+                <p
+                  className="font-body font-semibold"
+                  style={{ color: P.light }}
+                >
+                  {selected.condition}
+                </p>
+                <p className="font-body text-sm" style={{ color: P.tan }}>
+                  Feels Like {selected.feelsLike}° C
+                </p>
+
+                {/* High / Low */}
+                <div className="flex gap-3 mt-1">
                   <span
-                    className="font-display text-xl"
-                    style={{ color: P.light }}
+                    className="font-body text-xs px-2 py-0.5 rounded"
+                    style={{ background: `${P.dark}30`, color: P.mid }}
                   >
-                    {currentWeather.aqi}
+                    ↑ {selected.high}°
                   </span>
-                  <span className="font-body text-xs" style={{ color: P.mid }}>
-                    {currentWeather.aqiLabel}
+                  <span
+                    className="font-body text-xs px-2 py-0.5 rounded"
+                    style={{ background: `#1a3060`, color: "#7ab4f0" }}
+                  >
+                    ↓ {selected.low}°
                   </span>
                 </div>
               </div>
-              <p
-                className="font-body text-sm leading-relaxed"
-                style={{ color: P.tan }}
-              >
-                Displays the current air quality level based on pollution data
-                in the selected location. The AQI score shown is{" "}
-                {currentWeather.aqi}, which is categorized as{" "}
-                <strong style={{ color: P.mid }}>Good</strong>, meaning the air
-                quality is clean, safe, and poses little or no health risk for
-                outdoor activities.
+
+              {/* Right: stats grid */}
+              <div className="flex-1 grid grid-cols-3 gap-x-8 gap-y-5 content-start">
+                {[
+                  { label: "Feels like", value: `${selected.feelsLike}° C` },
+                  { label: "Wind status", value: selected.wind },
+                  { label: "Rain chance", value: selected.rain },
+                  { label: "Visibility", value: selected.visibility },
+                  { label: "UV index", value: selected.uvIndex },
+                  { label: "Pressure", value: selected.pressure },
+                ].map(({ label, value }) => (
+                  <div key={label}>
+                    <p className="font-body text-xs" style={{ color: P.tan }}>
+                      {label}
+                    </p>
+                    <p
+                      className="font-body font-semibold text-sm"
+                      style={{ color: P.light }}
+                    >
+                      {value}
+                    </p>
+                  </div>
+                ))}
+
+                {/* Sun arc */}
+                <div className="col-span-3 mt-2">
+                  <div className="flex items-end justify-between px-2">
+                    <div className="text-center">
+                      <div
+                        className="w-8 h-8 rounded-full mx-auto mb-1"
+                        style={{
+                          background: `${P.mid}22`,
+                          border: `1px solid ${P.mid}66`,
+                        }}
+                      />
+                      <p className="font-body text-xs" style={{ color: P.tan }}>
+                        Sunrise
+                      </p>
+                      <p
+                        className="font-body font-semibold text-xs"
+                        style={{ color: P.light }}
+                      >
+                        {selected.sunrise}
+                      </p>
+                    </div>
+                    <div className="flex-1 mx-4 mb-4">
+                      <SunArc
+                        sunrise={selected.sunrise}
+                        sunset={selected.sunset}
+                        isToday={selectedIdx === 0}
+                      />
+                    </div>
+                    <div className="text-center">
+                      <div
+                        className="w-8 h-8 rounded-full mx-auto mb-1"
+                        style={{
+                          background: `${P.tan}22`,
+                          border: `1px solid ${P.tan}66`,
+                        }}
+                      />
+                      <p className="font-body text-xs" style={{ color: P.tan }}>
+                        Sunset
+                      </p>
+                      <p
+                        className="font-body font-semibold text-xs"
+                        style={{ color: P.light }}
+                      >
+                        {selected.sunset}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 5-day mini strip */}
+            <div
+              className="mt-6 pt-5"
+              style={{ borderTop: `1px solid ${P.dark}33` }}
+            >
+              <p className="font-body text-xs mb-3" style={{ color: P.tan }}>
+                5-Day Overview
               </p>
+              <div className="flex gap-3">
+                {forecast.map((day, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setSelectedIdx(i)}
+                    className="flex-1 flex flex-col items-center gap-1.5 py-3 rounded-xl transition-all"
+                    style={
+                      selectedIdx === i
+                        ? {
+                            background: "#1a3a1a",
+                            border: `1px solid ${P.dark}55`,
+                          }
+                        : {
+                            background: `${P.dark}11`,
+                            border: `1px solid ${P.dark}22`,
+                          }
+                    }
+                  >
+                    <p
+                      className="font-body text-xs"
+                      style={{ color: selectedIdx === i ? P.light : P.tan }}
+                    >
+                      {day.label}
+                    </p>
+                    <ConditionIcon type={day.icon} size={28} />
+                    <p
+                      className="font-body text-xs font-semibold"
+                      style={{ color: P.light }}
+                    >
+                      {day.high}°
+                    </p>
+                    <p
+                      className="font-body text-xs"
+                      style={{ color: "#7ab4f0" }}
+                    >
+                      {day.low}°
+                    </p>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
-        </main>
-      </div>
+        )}
+
+        {/* ── Hourly tab ── */}
+        {tab === "hourly" && (
+          <div
+            className="rounded-2xl p-6"
+            style={{ background: P.card, border: `1px solid ${P.dark}33` }}
+          >
+            <p className="font-body text-xs mb-5" style={{ color: P.tan }}>
+              {selected.fullDate} — Hourly breakdown
+            </p>
+            <div className="grid grid-cols-6 gap-3">
+              {hourlyData.map((h) => {
+                const now = new Date();
+                const [hm, period] = h.time.split(" ");
+                let hh = parseInt(hm);
+                if (period === "PM" && hh !== 12) hh += 12;
+                if (period === "AM" && hh === 12) hh = 0;
+                const isCurrent =
+                  selectedIdx === 0 && Math.abs(now.getHours() - hh) < 2;
+                return (
+                  <div
+                    key={h.time}
+                    className="flex flex-col items-center gap-2 py-4 rounded-xl"
+                    style={
+                      isCurrent
+                        ? {
+                            background: "#1a3a1a",
+                            border: `1px solid ${P.dark}66`,
+                          }
+                        : {
+                            background: `${P.dark}11`,
+                            border: `1px solid ${P.dark}22`,
+                          }
+                    }
+                  >
+                    <p
+                      className="font-body text-xs"
+                      style={{ color: isCurrent ? P.light : P.tan }}
+                    >
+                      {h.time}
+                    </p>
+                    <ConditionIcon type={h.icon} size={32} />
+                    <p
+                      className="font-body text-sm font-semibold"
+                      style={{ color: P.light }}
+                    >
+                      {h.temp}°
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Temperature graph */}
+            <div
+              className="mt-6 pt-5"
+              style={{ borderTop: `1px solid ${P.dark}33` }}
+            >
+              <p className="font-body text-xs mb-3" style={{ color: P.tan }}>
+                Temperature trend
+              </p>
+              <svg viewBox="0 0 600 80" className="w-full overflow-visible">
+                <defs>
+                  <linearGradient
+                    id="tempGrad"
+                    x1="0%"
+                    y1="0%"
+                    x2="0%"
+                    y2="100%"
+                  >
+                    <stop offset="0%" stopColor={P.mid} stopOpacity="0.3" />
+                    <stop offset="100%" stopColor={P.mid} stopOpacity="0.02" />
+                  </linearGradient>
+                </defs>
+                {(() => {
+                  const temps = hourlyData.map((h) => h.temp);
+                  const minT = Math.min(...temps) - 2;
+                  const maxT = Math.max(...temps) + 2;
+                  const xs = [50, 150, 250, 350, 450, 550];
+                  const ys = temps.map(
+                    (t) => 70 - ((t - minT) / (maxT - minT)) * 55,
+                  );
+                  const pts = xs.map((x, i) => `${x},${ys[i]}`).join(" ");
+                  const areaPath =
+                    `M ${xs[0]},${ys[0]} ` +
+                    xs
+                      .slice(1)
+                      .map((x, i) => `L ${x},${ys[i + 1]}`)
+                      .join(" ") +
+                    ` L ${xs[5]},76 L ${xs[0]},76 Z`;
+                  const linePath =
+                    `M ${xs[0]},${ys[0]} ` +
+                    xs
+                      .slice(1)
+                      .map((x, i) => `L ${x},${ys[i + 1]}`)
+                      .join(" ");
+                  return (
+                    <>
+                      <path d={areaPath} fill="url(#tempGrad)" />
+                      <path
+                        d={linePath}
+                        stroke={P.mid}
+                        strokeWidth="1.5"
+                        fill="none"
+                        strokeLinejoin="round"
+                      />
+                      {xs.map((x, i) => (
+                        <g key={i}>
+                          <circle
+                            cx={x}
+                            cy={ys[i]}
+                            r="3.5"
+                            fill={P.card}
+                            stroke={P.mid}
+                            strokeWidth="1.5"
+                          />
+                          <text
+                            x={x}
+                            y={ys[i] - 8}
+                            textAnchor="middle"
+                            style={{
+                              fontSize: "9px",
+                              fill: P.tan,
+                              fontFamily: "sans-serif",
+                            }}
+                          >
+                            {temps[i]}°
+                          </text>
+                        </g>
+                      ))}
+                    </>
+                  );
+                })()}
+              </svg>
+            </div>
+          </div>
+        )}
+
+        {/* ── AQI ── */}
+        <div
+          className="rounded-2xl p-6"
+          style={{ background: P.card, border: `1px solid ${P.dark}33` }}
+        >
+          <p
+            className="font-body font-semibold mb-4"
+            style={{ color: P.light }}
+          >
+            Air Quality Index
+          </p>
+          <div className="flex items-center gap-6">
+            <div className="relative w-20 h-20 shrink-0">
+              <svg viewBox="0 0 120 120" className="w-full h-full">
+                <circle
+                  cx="60"
+                  cy="60"
+                  r="50"
+                  fill="none"
+                  stroke="#347E3A33"
+                  strokeWidth="10"
+                />
+                <circle
+                  cx="60"
+                  cy="60"
+                  r="50"
+                  fill="none"
+                  stroke={P.mid}
+                  strokeWidth="10"
+                  strokeDasharray={`${(currentWeather.aqi / 150) * 314} 314`}
+                  strokeDashoffset="78"
+                  strokeLinecap="round"
+                  transform="rotate(-220 60 60)"
+                />
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <span
+                  className="font-display text-xl"
+                  style={{ color: P.light }}
+                >
+                  {currentWeather.aqi}
+                </span>
+                <span className="font-body text-xs" style={{ color: P.mid }}>
+                  {currentWeather.aqiLabel}
+                </span>
+              </div>
+            </div>
+            <p
+              className="font-body text-sm leading-relaxed"
+              style={{ color: P.tan }}
+            >
+              Displays the current air quality level based on pollution data in
+              the selected location. The AQI score shown is {currentWeather.aqi}
+              , which is categorized as{" "}
+              <strong style={{ color: P.mid }}>Good</strong>, meaning the air
+              quality is clean, safe, and poses little or no health risk for
+              outdoor activities.
+            </p>
+          </div>
+        </div>
+      </main>
     </div>
   );
 }

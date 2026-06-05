@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, BarChart2, MapPin, Settings, ChevronDown } from "lucide-react";
+import { Home, BarChart2, MapPin, Settings, ChevronDown, PanelLeftClose } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 const navItems = [
@@ -9,7 +9,8 @@ const navItems = [
   { label: "Settings", icon: Settings, path: "/settings" },
 ];
 
-export default function Sidebar() {
+// onToggle 
+export default function Sidebar({ onToggle }) {
   const location = useLocation();
   const { user } = useAuth();
 
@@ -17,22 +18,30 @@ export default function Sidebar() {
 
   return (
     <aside
-      className="w-[240px] min-h-screen flex flex-col py-7 px-5 shrink-0"
+      className="w-[240px] h-full flex flex-col py-7 px-5 shrink-0"
       style={{
         background: "#080704",
         borderRight: "1px solid rgba(52,126,58,0.13)",
       }}
     >
-      {/* Logo */}
-      <div className="mb-8">
+      {/* Logo + tombol tutup */}
+      <div className="mb-8 flex items-start justify-between">
         <h1 className="font-display text-3xl leading-tight tracking-tight">
-          <span className="block" style={{ color: "#D3BE94" }}>
-            WEATHER
-          </span>
-          <span className="block" style={{ color: "#56B988" }}>
-            FORECAST
-          </span>
+          <span className="block" style={{ color: "#D3BE94" }}>WEATHER</span>
+          <span className="block" style={{ color: "#56B988" }}>FORECAST</span>
         </h1>
+
+        {/* Tombol slide out */}
+        {onToggle && (
+          <button
+            onClick={onToggle}
+            className="mt-1 w-8 h-8 flex items-center justify-center rounded-lg transition-all"
+            style={{ color: "#D3BE94" }}
+            title="Tutup sidebar"
+          >
+            <PanelLeftClose size={18} />
+          </button>
+        )}
       </div>
 
       {/* Nav */}
@@ -77,16 +86,10 @@ export default function Sidebar() {
             {user?.username?.[0]?.toUpperCase() || "U"}
           </div>
           <div className="flex-1 min-w-0">
-            <p
-              className="font-body font-semibold text-sm truncate"
-              style={{ color: "#F3EEE3" }}
-            >
+            <p className="font-body font-semibold text-sm truncate" style={{ color: "#F3EEE3" }}>
               {user?.username || "CoolUsername123"}
             </p>
-            <p
-              className="font-body text-xs truncate"
-              style={{ color: "#56B988" }}
-            >
+            <p className="font-body text-xs truncate" style={{ color: "#56B988" }}>
               @{user?.username?.toLowerCase() || "coolusername123"}
             </p>
           </div>

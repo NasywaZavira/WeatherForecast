@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import { useAuth } from "../context/AuthContext";
 import {
@@ -225,347 +224,341 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="flex min-h-screen" style={{ background: P.black }}>
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Topbar />
-        <main className="flex-1 overflow-y-auto p-6">
-          <div className="max-w-2xl mx-auto space-y-5">
-            <h2
-              className="font-body font-bold text-xl"
-              style={{ color: P.light }}
-            >
-              Settings
-            </h2>
+    <div className="flex-1 flex flex-col overflow-hidden">
+      <Topbar />
+      <main className="flex-1 overflow-y-auto p-6">
+        <div className="max-w-2xl mx-auto space-y-5">
+          <h2
+            className="font-body font-bold text-xl"
+            style={{ color: P.light }}
+          >
+            Settings
+          </h2>
 
-            {/* ── Profile ── */}
-            <SectionCard
-              icon={User}
-              title="Profile"
-              description="Update your display name and email"
-            >
-              <SettingRow label="Username" description="Shown in the sidebar">
-                <input
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="font-body text-sm px-4 py-2 rounded-xl outline-none w-48"
-                  style={{
-                    background: `${P.dark}22`,
-                    border: `1px solid ${P.dark}44`,
-                    color: P.light,
-                  }}
-                />
-              </SettingRow>
-              <SettingRow label="Email" description="Used for account recovery">
-                <input
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  type="email"
-                  className="font-body text-sm px-4 py-2 rounded-xl outline-none w-48"
-                  style={{
-                    background: `${P.dark}22`,
-                    border: `1px solid ${P.dark}44`,
-                    color: P.light,
-                  }}
-                />
-              </SettingRow>
-              <div className="flex justify-end pt-1">
-                <SaveButton onClick={handleSaveProfile} saved={profileSaved} />
-              </div>
-            </SectionCard>
+          {/* ── Profile ── */}
+          <SectionCard
+            icon={User}
+            title="Profile"
+            description="Update your display name and email"
+          >
+            <SettingRow label="Username" description="Shown in the sidebar">
+              <input
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="font-body text-sm px-4 py-2 rounded-xl outline-none w-48"
+                style={{
+                  background: `${P.dark}22`,
+                  border: `1px solid ${P.dark}44`,
+                  color: P.light,
+                }}
+              />
+            </SettingRow>
+            <SettingRow label="Email" description="Used for account recovery">
+              <input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                type="email"
+                className="font-body text-sm px-4 py-2 rounded-xl outline-none w-48"
+                style={{
+                  background: `${P.dark}22`,
+                  border: `1px solid ${P.dark}44`,
+                  color: P.light,
+                }}
+              />
+            </SettingRow>
+            <div className="flex justify-end pt-1">
+              <SaveButton onClick={handleSaveProfile} saved={profileSaved} />
+            </div>
+          </SectionCard>
 
-            {/* ── Password ── */}
-            <SectionCard
-              icon={Shield}
-              title="Password"
-              description="Change your account password"
-            >
-              {[
-                {
-                  label: "Current password",
-                  val: currentPw,
-                  set: setCurrentPw,
-                },
-                { label: "New password", val: newPw, set: setNewPw },
-                {
-                  label: "Confirm password",
-                  val: confirmPw,
-                  set: setConfirmPw,
-                },
-              ].map(({ label, val, set }) => (
-                <SettingRow key={label} label={label}>
-                  <div className="relative">
-                    <input
-                      type={showPw ? "text" : "password"}
-                      value={val}
-                      onChange={(e) => set(e.target.value)}
-                      placeholder="••••••••"
-                      className="font-body text-sm px-4 py-2 pr-10 rounded-xl outline-none w-48"
-                      style={{
-                        background: `${P.dark}22`,
-                        border: `1px solid ${P.dark}44`,
-                        color: P.light,
-                      }}
-                    />
-                    <button
-                      onClick={() => setShowPw((s) => !s)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2"
-                      style={{ color: P.tan }}
-                    >
-                      {showPw ? <EyeOff size={13} /> : <Eye size={13} />}
-                    </button>
-                  </div>
-                </SettingRow>
-              ))}
-              {pwError && (
-                <p
-                  className="font-body text-xs px-1"
-                  style={{ color: "#f07070" }}
-                >
-                  {pwError}
-                </p>
-              )}
-              <div className="flex justify-end pt-1">
-                <SaveButton onClick={handleSavePassword} saved={pwSaved} />
-              </div>
-            </SectionCard>
-
-            {/* ── Units ── */}
-            <SectionCard
-              icon={Thermometer}
-              title="Units & Format"
-              description="Customize how weather data is displayed"
-            >
-              <SettingRow label="Temperature unit">
-                <SelectBox
-                  value={tempUnit}
-                  onChange={setTempUnit}
-                  options={[
-                    { value: "celsius", label: "°C — Celsius" },
-                    { value: "fahrenheit", label: "°F — Fahrenheit" },
-                    { value: "kelvin", label: "K — Kelvin" },
-                  ]}
-                />
-              </SettingRow>
-              <SettingRow label="Wind speed">
-                <SelectBox
-                  value={windUnit}
-                  onChange={setWindUnit}
-                  options={[
-                    { value: "kmh", label: "km/h" },
-                    { value: "mph", label: "mph" },
-                    { value: "ms", label: "m/s" },
-                    { value: "knot", label: "knot" },
-                  ]}
-                />
-              </SettingRow>
-              <SettingRow label="Pressure">
-                <SelectBox
-                  value={pressureUnit}
-                  onChange={setPressureUnit}
-                  options={[
-                    { value: "hpa", label: "hPa" },
-                    { value: "mbar", label: "mbar" },
-                    { value: "inhg", label: "inHg" },
-                    { value: "mmhg", label: "mmHg" },
-                  ]}
-                />
-              </SettingRow>
-              <SettingRow label="Time format">
-                <SelectBox
-                  value={timeFormat}
-                  onChange={setTimeFormat}
-                  options={[
-                    { value: "24h", label: "24-hour (13:00)" },
-                    { value: "12h", label: "12-hour (1:00 PM)" },
-                  ]}
-                />
-              </SettingRow>
-              <div className="flex justify-end pt-1">
-                <SaveButton
-                  onClick={() => flashSaved(setUnitSaved)}
-                  saved={unitSaved}
-                />
-              </div>
-            </SectionCard>
-
-            {/* ── Notifications ── */}
-            <SectionCard
-              icon={Bell}
-              title="Notifications"
-              description="Choose which weather alerts to receive"
-            >
-              <SettingRow
-                label="Rain alert"
-                description="Notify when rain is expected"
-              >
-                <Toggle value={notifRain} onChange={setNotifRain} />
-              </SettingRow>
-              <SettingRow
-                label="Severe weather warning"
-                description="Storms, strong winds, extreme temperatures"
-              >
-                <Toggle value={notifSevere} onChange={setNotifSevere} />
-              </SettingRow>
-              <SettingRow
-                label="Daily summary"
-                description="Morning briefing every day at 7:00 AM"
-              >
-                <Toggle value={notifDaily} onChange={setNotifDaily} />
-              </SettingRow>
-              <SettingRow
-                label="UV index alert"
-                description="Notify when UV index exceeds moderate level"
-              >
-                <Toggle value={notifUV} onChange={setNotifUV} />
-              </SettingRow>
-              <div className="flex justify-end pt-1">
-                <SaveButton
-                  onClick={() => flashSaved(setNotifSaved)}
-                  saved={notifSaved}
-                />
-              </div>
-            </SectionCard>
-
-            {/* ── Display ── */}
-            <SectionCard
-              icon={Monitor}
-              title="Display"
-              description="Appearance and regional preferences"
-            >
-              <SettingRow label="Theme">
-                <div className="flex gap-2">
-                  {[
-                    { val: "dark", icon: Monitor, label: "Dark" },
-                    { val: "light", icon: Sun, label: "Light" },
-                    { val: "auto", icon: Smartphone, label: "Auto" },
-                  ].map(({ val, icon: Icon, label }) => (
-                    <button
-                      key={val}
-                      onClick={() => setTheme(val)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-body text-xs transition-all"
-                      style={
-                        theme === val
-                          ? {
-                              background: `${P.dark}44`,
-                              color: P.light,
-                              border: `1px solid ${P.dark}66`,
-                            }
-                          : {
-                              background: "transparent",
-                              color: P.tan,
-                              border: `1px solid ${P.dark}22`,
-                            }
-                      }
-                    >
-                      <Icon size={11} />
-                      {label}
-                    </button>
-                  ))}
-                </div>
-              </SettingRow>
-              <SettingRow label="Language">
-                <SelectBox
-                  value={language}
-                  onChange={setLanguage}
-                  options={[
-                    { value: "en", label: "English" },
-                    { value: "id", label: "Bahasa Indonesia" },
-                    { value: "ms", label: "Bahasa Melayu" },
-                    { value: "zh", label: "Chinese (Simplified)" },
-                    { value: "ar", label: "Arabic" },
-                  ]}
-                />
-              </SettingRow>
-              <SettingRow
-                label="Default city"
-                description="City shown first on Dashboard"
-              >
-                <input
-                  value={defaultCity}
-                  onChange={(e) => setDefaultCity(e.target.value)}
-                  className="font-body text-sm px-4 py-2 rounded-xl outline-none w-36"
-                  style={{
-                    background: `${P.dark}22`,
-                    border: `1px solid ${P.dark}44`,
-                    color: P.light,
-                  }}
-                />
-              </SettingRow>
-              <SettingRow
-                label="UI animations"
-                description="Smooth transitions and arc animations"
-              >
-                <Toggle value={animationsOn} onChange={setAnimationsOn} />
-              </SettingRow>
-              <div className="flex justify-end pt-1">
-                <SaveButton
-                  onClick={() => flashSaved(setDisplaySaved)}
-                  saved={displaySaved}
-                />
-              </div>
-            </SectionCard>
-
-            {/* ── About ── */}
-            <div
-              className="rounded-2xl p-6"
-              style={{ background: P.card, border: `1px solid ${P.dark}33` }}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div
-                    className="w-9 h-9 rounded-xl flex items-center justify-center"
+          {/* ── Password ── */}
+          <SectionCard
+            icon={Shield}
+            title="Password"
+            description="Change your account password"
+          >
+            {[
+              {
+                label: "Current password",
+                val: currentPw,
+                set: setCurrentPw,
+              },
+              { label: "New password", val: newPw, set: setNewPw },
+              {
+                label: "Confirm password",
+                val: confirmPw,
+                set: setConfirmPw,
+              },
+            ].map(({ label, val, set }) => (
+              <SettingRow key={label} label={label}>
+                <div className="relative">
+                  <input
+                    type={showPw ? "text" : "password"}
+                    value={val}
+                    onChange={(e) => set(e.target.value)}
+                    placeholder="••••••••"
+                    className="font-body text-sm px-4 py-2 pr-10 rounded-xl outline-none w-48"
                     style={{
                       background: `${P.dark}22`,
                       border: `1px solid ${P.dark}44`,
+                      color: P.light,
                     }}
+                  />
+                  <button
+                    onClick={() => setShowPw((s) => !s)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                    style={{ color: P.tan }}
                   >
-                    <Globe size={16} style={{ color: P.mid }} />
-                  </div>
-                  <div>
-                    <p
-                      className="font-body font-semibold text-sm"
-                      style={{ color: P.light }}
-                    >
-                      About
-                    </p>
-                    <p className="font-body text-xs" style={{ color: P.tan }}>
-                      App info & data source
-                    </p>
-                  </div>
+                    {showPw ? <EyeOff size={13} /> : <Eye size={13} />}
+                  </button>
                 </div>
-              </div>
-              <div className="mt-5 space-y-2">
+              </SettingRow>
+            ))}
+            {pwError && (
+              <p
+                className="font-body text-xs px-1"
+                style={{ color: "#f07070" }}
+              >
+                {pwError}
+              </p>
+            )}
+            <div className="flex justify-end pt-1">
+              <SaveButton onClick={handleSavePassword} saved={pwSaved} />
+            </div>
+          </SectionCard>
+
+          {/* ── Units ── */}
+          <SectionCard
+            icon={Thermometer}
+            title="Units & Format"
+            description="Customize how weather data is displayed"
+          >
+            <SettingRow label="Temperature unit">
+              <SelectBox
+                value={tempUnit}
+                onChange={setTempUnit}
+                options={[
+                  { value: "celsius", label: "°C — Celsius" },
+                  { value: "fahrenheit", label: "°F — Fahrenheit" },
+                  { value: "kelvin", label: "K — Kelvin" },
+                ]}
+              />
+            </SettingRow>
+            <SettingRow label="Wind speed">
+              <SelectBox
+                value={windUnit}
+                onChange={setWindUnit}
+                options={[
+                  { value: "kmh", label: "km/h" },
+                  { value: "mph", label: "mph" },
+                  { value: "ms", label: "m/s" },
+                  { value: "knot", label: "knot" },
+                ]}
+              />
+            </SettingRow>
+            <SettingRow label="Pressure">
+              <SelectBox
+                value={pressureUnit}
+                onChange={setPressureUnit}
+                options={[
+                  { value: "hpa", label: "hPa" },
+                  { value: "mbar", label: "mbar" },
+                  { value: "inhg", label: "inHg" },
+                  { value: "mmhg", label: "mmHg" },
+                ]}
+              />
+            </SettingRow>
+            <SettingRow label="Time format">
+              <SelectBox
+                value={timeFormat}
+                onChange={setTimeFormat}
+                options={[
+                  { value: "24h", label: "24-hour (13:00)" },
+                  { value: "12h", label: "12-hour (1:00 PM)" },
+                ]}
+              />
+            </SettingRow>
+            <div className="flex justify-end pt-1">
+              <SaveButton
+                onClick={() => flashSaved(setUnitSaved)}
+                saved={unitSaved}
+              />
+            </div>
+          </SectionCard>
+
+          {/* ── Notifications ── */}
+          <SectionCard
+            icon={Bell}
+            title="Notifications"
+            description="Choose which weather alerts to receive"
+          >
+            <SettingRow
+              label="Rain alert"
+              description="Notify when rain is expected"
+            >
+              <Toggle value={notifRain} onChange={setNotifRain} />
+            </SettingRow>
+            <SettingRow
+              label="Severe weather warning"
+              description="Storms, strong winds, extreme temperatures"
+            >
+              <Toggle value={notifSevere} onChange={setNotifSevere} />
+            </SettingRow>
+            <SettingRow
+              label="Daily summary"
+              description="Morning briefing every day at 7:00 AM"
+            >
+              <Toggle value={notifDaily} onChange={setNotifDaily} />
+            </SettingRow>
+            <SettingRow
+              label="UV index alert"
+              description="Notify when UV index exceeds moderate level"
+            >
+              <Toggle value={notifUV} onChange={setNotifUV} />
+            </SettingRow>
+            <div className="flex justify-end pt-1">
+              <SaveButton
+                onClick={() => flashSaved(setNotifSaved)}
+                saved={notifSaved}
+              />
+            </div>
+          </SectionCard>
+
+          {/* ── Display ── */}
+          <SectionCard
+            icon={Monitor}
+            title="Display"
+            description="Appearance and regional preferences"
+          >
+            <SettingRow label="Theme">
+              <div className="flex gap-2">
                 {[
-                  ["App version", "v1.0.0"],
-                  ["Weather data", "OpenWeatherMap API"],
-                  ["Map provider", "CartoDB (Leaflet.js)"],
-                  ["Built with", "React + Vite + Tailwind CSS"],
-                ].map(([key, val]) => (
-                  <div
-                    key={key}
-                    className="flex justify-between py-2"
-                    style={{ borderBottom: `1px solid ${P.dark}18` }}
+                  { val: "dark", icon: Monitor, label: "Dark" },
+                  { val: "light", icon: Sun, label: "Light" },
+                  { val: "auto", icon: Smartphone, label: "Auto" },
+                ].map(({ val, icon: Icon, label }) => (
+                  <button
+                    key={val}
+                    onClick={() => setTheme(val)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-body text-xs transition-all"
+                    style={
+                      theme === val
+                        ? {
+                            background: `${P.dark}44`,
+                            color: P.light,
+                            border: `1px solid ${P.dark}66`,
+                          }
+                        : {
+                            background: "transparent",
+                            color: P.tan,
+                            border: `1px solid ${P.dark}22`,
+                          }
+                    }
                   >
-                    <span
-                      className="font-body text-xs"
-                      style={{ color: P.tan }}
-                    >
-                      {key}
-                    </span>
-                    <span
-                      className="font-body text-xs font-medium"
-                      style={{ color: P.light }}
-                    >
-                      {val}
-                    </span>
-                  </div>
+                    <Icon size={11} />
+                    {label}
+                  </button>
                 ))}
               </div>
+            </SettingRow>
+            <SettingRow label="Language">
+              <SelectBox
+                value={language}
+                onChange={setLanguage}
+                options={[
+                  { value: "en", label: "English" },
+                  { value: "id", label: "Bahasa Indonesia" },
+                  { value: "ms", label: "Bahasa Melayu" },
+                  { value: "zh", label: "Chinese (Simplified)" },
+                  { value: "ar", label: "Arabic" },
+                ]}
+              />
+            </SettingRow>
+            <SettingRow
+              label="Default city"
+              description="City shown first on Dashboard"
+            >
+              <input
+                value={defaultCity}
+                onChange={(e) => setDefaultCity(e.target.value)}
+                className="font-body text-sm px-4 py-2 rounded-xl outline-none w-36"
+                style={{
+                  background: `${P.dark}22`,
+                  border: `1px solid ${P.dark}44`,
+                  color: P.light,
+                }}
+              />
+            </SettingRow>
+            <SettingRow
+              label="UI animations"
+              description="Smooth transitions and arc animations"
+            >
+              <Toggle value={animationsOn} onChange={setAnimationsOn} />
+            </SettingRow>
+            <div className="flex justify-end pt-1">
+              <SaveButton
+                onClick={() => flashSaved(setDisplaySaved)}
+                saved={displaySaved}
+              />
+            </div>
+          </SectionCard>
+
+          {/* ── About ── */}
+          <div
+            className="rounded-2xl p-6"
+            style={{ background: P.card, border: `1px solid ${P.dark}33` }}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-9 h-9 rounded-xl flex items-center justify-center"
+                  style={{
+                    background: `${P.dark}22`,
+                    border: `1px solid ${P.dark}44`,
+                  }}
+                >
+                  <Globe size={16} style={{ color: P.mid }} />
+                </div>
+                <div>
+                  <p
+                    className="font-body font-semibold text-sm"
+                    style={{ color: P.light }}
+                  >
+                    About
+                  </p>
+                  <p className="font-body text-xs" style={{ color: P.tan }}>
+                    App info & data source
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="mt-5 space-y-2">
+              {[
+                ["App version", "v1.0.0"],
+                ["Weather data", "OpenWeatherMap API"],
+                ["Map provider", "CartoDB (Leaflet.js)"],
+                ["Built with", "React + Vite + Tailwind CSS"],
+              ].map(([key, val]) => (
+                <div
+                  key={key}
+                  className="flex justify-between py-2"
+                  style={{ borderBottom: `1px solid ${P.dark}18` }}
+                >
+                  <span className="font-body text-xs" style={{ color: P.tan }}>
+                    {key}
+                  </span>
+                  <span
+                    className="font-body text-xs font-medium"
+                    style={{ color: P.light }}
+                  >
+                    {val}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   );
 }

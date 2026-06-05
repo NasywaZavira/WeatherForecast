@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import ConditionIcon from "../components/ConditionIcon";
 import { fetchAllWeatherData } from "../service/weatherService";
@@ -113,196 +112,257 @@ export default function Dashboard() {
 
   // ── Render: Dashboard ──────────────────────────
   return (
-    <div className="flex min-h-screen" style={{ background: P.black }}>
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Topbar />
-        <main className="flex-1 overflow-y-auto p-6 space-y-5">
-          {/* Row 1: Current Weather | AQI | Map */}
-          <div className="grid grid-cols-[1fr_220px_280px] gap-4">
-            {/* Current Weather */}
-            <div
-              className="rounded-2xl p-6 flex flex-col justify-between min-h-[200px]"
-              style={{ background: P.card, border: `1px solid ${P.dark}33` }}
-            >
-              <p className="font-body text-sm" style={{ color: P.tan }}>
-                Current Weather · {currentWeather.location}
-              </p>
-              <div className="flex items-end justify-between mt-3">
-                <div>
-                  <p
-                    className="font-display text-6xl leading-none"
-                    style={{ color: P.light }}
-                  >
-                    {currentWeather.temp}° C
-                  </p>
-                  <p
-                    className="font-body font-semibold text-lg mt-3"
-                    style={{ color: P.light }}
-                  >
-                    {currentWeather.condition}
-                  </p>
-                  <p
-                    className="font-body text-sm mt-0.5"
-                    style={{ color: P.tan }}
-                  >
-                    Feels Like {currentWeather.feelsLike}° C
-                  </p>
-                </div>
-                <div className="mb-2">
-                  <ConditionIcon
-                    type={currentWeather.icon ?? "partly-cloudy"}
-                    size={110}
-                  />
-                </div>
+    <div className="flex-1 flex flex-col overflow-hidden">
+      <Topbar />
+      <main className="flex-1 overflow-y-auto p-6 space-y-5">
+        {/* Row 1: Current Weather | AQI | Map */}
+        <div className="grid grid-cols-[1fr_220px_280px] gap-4">
+          {/* Current Weather */}
+          <div
+            className="rounded-2xl p-6 flex flex-col justify-between min-h-[200px]"
+            style={{ background: P.card, border: `1px solid ${P.dark}33` }}
+          >
+            <p className="font-body text-sm" style={{ color: P.tan }}>
+              Current Weather · {currentWeather.location}
+            </p>
+            <div className="flex items-end justify-between mt-3">
+              <div>
+                <p
+                  className="font-display text-6xl leading-none"
+                  style={{ color: P.light }}
+                >
+                  {currentWeather.temp}° C
+                </p>
+                <p
+                  className="font-body font-semibold text-lg mt-3"
+                  style={{ color: P.light }}
+                >
+                  {currentWeather.condition}
+                </p>
+                <p
+                  className="font-body text-sm mt-0.5"
+                  style={{ color: P.tan }}
+                >
+                  Feels Like {currentWeather.feelsLike}° C
+                </p>
               </div>
-            </div>
-
-            {/* AQI */}
-            <div
-              className="rounded-2xl p-6 flex flex-col"
-              style={{ background: P.card, border: `1px solid ${P.dark}33` }}
-            >
-              <p className="font-body text-sm" style={{ color: P.tan }}>
-                Air Quality Index
-              </p>
-              <div className="flex-1 flex items-center justify-center mt-4">
-                <div className="relative w-28 h-28">
-                  <svg viewBox="0 0 120 120" className="w-full h-full">
-                    <circle
-                      cx="60"
-                      cy="60"
-                      r="50"
-                      fill="none"
-                      stroke="#347E3A33"
-                      strokeWidth="10"
-                    />
-                    <circle
-                      cx="60"
-                      cy="60"
-                      r="50"
-                      fill="none"
-                      stroke={P.mid}
-                      strokeWidth="10"
-                      strokeDasharray={`${((currentWeather.aqi ?? 0) / 150) * 314} 314`}
-                      strokeDashoffset="78"
-                      strokeLinecap="round"
-                      transform="rotate(-220 60 60)"
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span
-                      className="font-display text-3xl leading-none"
-                      style={{ color: P.light }}
-                    >
-                      {currentWeather.aqi ?? "—"}
-                    </span>
-                    <span
-                      className="font-body text-sm font-medium mt-0.5"
-                      style={{ color: P.mid }}
-                    >
-                      {currentWeather.aqiLabel ?? "—"}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Map */}
-            <div
-              className="rounded-2xl p-4 flex flex-col"
-              style={{ background: P.card, border: `1px solid ${P.dark}33` }}
-            >
-              <p className="font-body text-sm mb-2" style={{ color: P.tan }}>
-                Map
-              </p>
-              <div
-                className="flex-1 rounded-xl relative overflow-hidden min-h-[140px]"
-                style={{ background: "#0a1a0a" }}
-              >
-                <div
-                  className="absolute inset-0 opacity-20"
-                  style={{
-                    backgroundImage: `repeating-linear-gradient(0deg,${P.dark} 0,${P.dark} 1px,transparent 1px,transparent 24px),repeating-linear-gradient(90deg,${P.dark} 0,${P.dark} 1px,transparent 1px,transparent 24px)`,
-                  }}
+              <div className="mb-2">
+                <ConditionIcon
+                  type={currentWeather.icon ?? "partly-cloudy"}
+                  size={110}
                 />
-                <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
-                  <div
-                    className="w-6 h-6 rounded-full flex items-center justify-center"
-                    style={{
-                      background: `${P.mid}33`,
-                      border: `2px solid ${P.mid}`,
-                    }}
-                  >
-                    <div
-                      className="w-2 h-2 rounded-full"
-                      style={{ background: P.mid }}
-                    />
-                  </div>
-                  <span
-                    className="font-body text-xs mt-1"
-                    style={{ color: P.light }}
-                  >
-                    {currentWeather.location}
-                  </span>
-                </div>
               </div>
-              <Link
-                to="/location"
-                className="font-body text-xs mt-2 text-right block transition-colors hover:underline"
-                style={{ color: P.tan }}
-              >
-                View full map →
-              </Link>
             </div>
           </div>
 
-          {/* Row 2: 5-Day Forecast */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <h3
-                className="font-body font-semibold"
-                style={{ color: P.light }}
-              >
-                5-Day Forecast
-              </h3>
-              <Link
-                to="/forecast"
-                className="font-body text-sm hover:underline"
-                style={{ color: P.tan }}
-              >
-                View All ›
-              </Link>
-            </div>
-            <div className="grid grid-cols-5 gap-3">
-              {forecast5Day.map((day, i) => (
-                <div
-                  key={day.day}
-                  className="rounded-2xl p-5 flex flex-col items-center gap-3"
-                  style={{
-                    background: i === 0 ? "#1a3a1a" : P.card,
-                    border: `1px solid ${i === 0 ? P.dark + "66" : P.dark + "22"}`,
-                  }}
-                >
-                  <p
-                    className="font-body font-bold text-sm"
+          {/* AQI */}
+          <div
+            className="rounded-2xl p-6 flex flex-col"
+            style={{ background: P.card, border: `1px solid ${P.dark}33` }}
+          >
+            <p className="font-body text-sm" style={{ color: P.tan }}>
+              Air Quality Index
+            </p>
+            <div className="flex-1 flex items-center justify-center mt-4">
+              <div className="relative w-28 h-28">
+                <svg viewBox="0 0 120 120" className="w-full h-full">
+                  <circle
+                    cx="60"
+                    cy="60"
+                    r="50"
+                    fill="none"
+                    stroke="#347E3A33"
+                    strokeWidth="10"
+                  />
+                  <circle
+                    cx="60"
+                    cy="60"
+                    r="50"
+                    fill="none"
+                    stroke={P.mid}
+                    strokeWidth="10"
+                    strokeDasharray={`${((currentWeather.aqi ?? 0) / 150) * 314} 314`}
+                    strokeDashoffset="78"
+                    strokeLinecap="round"
+                    transform="rotate(-220 60 60)"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span
+                    className="font-display text-3xl leading-none"
                     style={{ color: P.light }}
                   >
-                    {day.day}
+                    {currentWeather.aqi ?? "—"}
+                  </span>
+                  <span
+                    className="font-body text-sm font-medium mt-0.5"
+                    style={{ color: P.mid }}
+                  >
+                    {currentWeather.aqiLabel ?? "—"}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Map */}
+          <div
+            className="rounded-2xl p-4 flex flex-col"
+            style={{ background: P.card, border: `1px solid ${P.dark}33` }}
+          >
+            <p className="font-body text-sm mb-2" style={{ color: P.tan }}>
+              Map
+            </p>
+            <div
+              className="flex-1 rounded-xl relative overflow-hidden min-h-[140px]"
+              style={{ background: "#0a1a0a" }}
+            >
+              <div
+                className="absolute inset-0 opacity-20"
+                style={{
+                  backgroundImage: `repeating-linear-gradient(0deg,${P.dark} 0,${P.dark} 1px,transparent 1px,transparent 24px),repeating-linear-gradient(90deg,${P.dark} 0,${P.dark} 1px,transparent 1px,transparent 24px)`,
+                }}
+              />
+              <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
+                <div
+                  className="w-6 h-6 rounded-full flex items-center justify-center"
+                  style={{
+                    background: `${P.mid}33`,
+                    border: `2px solid ${P.mid}`,
+                  }}
+                >
+                  <div
+                    className="w-2 h-2 rounded-full"
+                    style={{ background: P.mid }}
+                  />
+                </div>
+                <span
+                  className="font-body text-xs mt-1"
+                  style={{ color: P.light }}
+                >
+                  {currentWeather.location}
+                </span>
+              </div>
+            </div>
+            <Link
+              to="/location"
+              className="font-body text-xs mt-2 text-right block transition-colors hover:underline"
+              style={{ color: P.tan }}
+            >
+              View full map →
+            </Link>
+          </div>
+        </div>
+
+        {/* Row 2: 5-Day Forecast */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-body font-semibold" style={{ color: P.light }}>
+              5-Day Forecast
+            </h3>
+            <Link
+              to="/forecast"
+              className="font-body text-sm hover:underline"
+              style={{ color: P.tan }}
+            >
+              View All ›
+            </Link>
+          </div>
+          <div className="grid grid-cols-5 gap-3">
+            {forecast5Day.map((day, i) => (
+              <div
+                key={day.day}
+                className="rounded-2xl p-5 flex flex-col items-center gap-3"
+                style={{
+                  background: i === 0 ? "#1a3a1a" : P.card,
+                  border: `1px solid ${i === 0 ? P.dark + "66" : P.dark + "22"}`,
+                }}
+              >
+                <p
+                  className="font-body font-bold text-sm"
+                  style={{ color: P.light }}
+                >
+                  {day.day}
+                </p>
+                <ConditionIcon type={day.icon} size={44} />
+                <div className="text-center">
+                  <p
+                    className="font-body font-bold text-base"
+                    style={{ color: P.light }}
+                  >
+                    {day.high}° C
                   </p>
-                  <ConditionIcon type={day.icon} size={44} />
-                  <div className="text-center">
+                  <p
+                    className="font-body text-xs mt-0.5"
+                    style={{ color: P.tan }}
+                  >
+                    {day.low}° C
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Row 3: Highlights | Sun & Moon */}
+        <div className="grid grid-cols-[1fr_340px] gap-4">
+          {/* Today's Highlights */}
+          <div
+            className="rounded-2xl p-6"
+            style={{ background: P.card, border: `1px solid ${P.dark}33` }}
+          >
+            <p
+              className="font-body font-semibold mb-5"
+              style={{ color: P.light }}
+            >
+              Today's Highlights
+            </p>
+            <div className="grid grid-cols-3 gap-x-6 gap-y-6">
+              {[
+                {
+                  icon: <ThermIcon c={P.tan} />,
+                  label: "Feels like",
+                  value: `${currentWeather.feelsLike}° C`,
+                },
+                {
+                  icon: <WindIcon c={P.tan} />,
+                  label: "Wind status",
+                  value: currentWeather.wind,
+                },
+                {
+                  icon: <RainIcon c={P.tan} />,
+                  label: "Rain chance",
+                  value: currentWeather.rain ?? "—",
+                },
+                {
+                  icon: <EyeIcon c={P.tan} />,
+                  label: "Visibility",
+                  value: currentWeather.visibility,
+                },
+                {
+                  icon: <UVIcon c={P.tan} />,
+                  label: "UV index",
+                  value: currentWeather.uvIndex ?? "—",
+                },
+                {
+                  icon: <PresIcon c={P.tan} />,
+                  label: "Pressure",
+                  value: currentWeather.pressure,
+                },
+              ].map(({ icon, label, value }) => (
+                <div key={label} className="flex items-center gap-3">
+                  <div className="w-8 h-8 shrink-0 flex items-center justify-center opacity-80">
+                    {icon}
+                  </div>
+                  <div>
+                    <p className="font-body text-xs" style={{ color: P.tan }}>
+                      {label}
+                    </p>
                     <p
                       className="font-body font-bold text-base"
                       style={{ color: P.light }}
                     >
-                      {day.high}° C
-                    </p>
-                    <p
-                      className="font-body text-xs mt-0.5"
-                      style={{ color: P.tan }}
-                    >
-                      {day.low}° C
+                      {value}
                     </p>
                   </div>
                 </div>
@@ -310,134 +370,61 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Row 3: Highlights | Sun & Moon */}
-          <div className="grid grid-cols-[1fr_340px] gap-4">
-            {/* Today's Highlights */}
-            <div
-              className="rounded-2xl p-6"
-              style={{ background: P.card, border: `1px solid ${P.dark}33` }}
+          {/* Sun & Moon */}
+          <div
+            className="rounded-2xl p-6 flex flex-col"
+            style={{ background: P.card, border: `1px solid ${P.dark}33` }}
+          >
+            <p
+              className="font-body font-semibold mb-4"
+              style={{ color: P.light }}
             >
-              <p
-                className="font-body font-semibold mb-5"
-                style={{ color: P.light }}
+              Sun & Moon
+            </p>
+            <div className="relative flex-1 flex items-end justify-between px-2 min-h-[120px]">
+              <svg
+                viewBox="0 0 280 120"
+                className="absolute inset-0 w-full"
+                preserveAspectRatio="none"
               >
-                Today's Highlights
-              </p>
-              <div className="grid grid-cols-3 gap-x-6 gap-y-6">
-                {[
-                  {
-                    icon: <ThermIcon c={P.tan} />,
-                    label: "Feels like",
-                    value: `${currentWeather.feelsLike}° C`,
-                  },
-                  {
-                    icon: <WindIcon c={P.tan} />,
-                    label: "Wind status",
-                    value: currentWeather.wind,
-                  },
-                  {
-                    icon: <RainIcon c={P.tan} />,
-                    label: "Rain chance",
-                    value: currentWeather.rain ?? "—",
-                  },
-                  {
-                    icon: <EyeIcon c={P.tan} />,
-                    label: "Visibility",
-                    value: currentWeather.visibility,
-                  },
-                  {
-                    icon: <UVIcon c={P.tan} />,
-                    label: "UV index",
-                    value: currentWeather.uvIndex ?? "—",
-                  },
-                  {
-                    icon: <PresIcon c={P.tan} />,
-                    label: "Pressure",
-                    value: currentWeather.pressure,
-                  },
-                ].map(({ icon, label, value }) => (
-                  <div key={label} className="flex items-center gap-3">
-                    <div className="w-8 h-8 shrink-0 flex items-center justify-center opacity-80">
-                      {icon}
-                    </div>
-                    <div>
-                      <p className="font-body text-xs" style={{ color: P.tan }}>
-                        {label}
-                      </p>
-                      <p
-                        className="font-body font-bold text-base"
-                        style={{ color: P.light }}
-                      >
-                        {value}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Sun & Moon */}
-            <div
-              className="rounded-2xl p-6 flex flex-col"
-              style={{ background: P.card, border: `1px solid ${P.dark}33` }}
-            >
-              <p
-                className="font-body font-semibold mb-4"
-                style={{ color: P.light }}
-              >
-                Sun & Moon
-              </p>
-              <div className="relative flex-1 flex items-end justify-between px-2 min-h-[120px]">
-                <svg
-                  viewBox="0 0 280 120"
-                  className="absolute inset-0 w-full"
-                  preserveAspectRatio="none"
+                <path
+                  d="M20 110 Q140 10 260 110"
+                  stroke={P.tan}
+                  strokeWidth="1.5"
+                  fill="none"
+                  strokeDasharray="5 3"
+                  opacity="0.5"
+                />
+                <circle cx="140" cy="30" r="5" fill={P.tan} opacity="0.8" />
+              </svg>
+              <div className="text-center z-10 relative">
+                <SunriseIcon c={P.mid} />
+                <p className="font-body text-xs mt-1" style={{ color: P.tan }}>
+                  Sunrise
+                </p>
+                <p
+                  className="font-body font-semibold text-xs"
+                  style={{ color: P.light }}
                 >
-                  <path
-                    d="M20 110 Q140 10 260 110"
-                    stroke={P.tan}
-                    strokeWidth="1.5"
-                    fill="none"
-                    strokeDasharray="5 3"
-                    opacity="0.5"
-                  />
-                  <circle cx="140" cy="30" r="5" fill={P.tan} opacity="0.8" />
-                </svg>
-                <div className="text-center z-10 relative">
-                  <SunriseIcon c={P.mid} />
-                  <p
-                    className="font-body text-xs mt-1"
-                    style={{ color: P.tan }}
-                  >
-                    Sunrise
-                  </p>
-                  <p
-                    className="font-body font-semibold text-xs"
-                    style={{ color: P.light }}
-                  >
-                    {currentWeather.sunrise}
-                  </p>
-                </div>
-                <div className="text-center z-10 relative">
-                  <SunsetIcon c={P.tan} />
-                  <p
-                    className="font-body text-xs mt-1"
-                    style={{ color: P.tan }}
-                  >
-                    Sunset
-                  </p>
-                  <p
-                    className="font-body font-semibold text-xs"
-                    style={{ color: P.light }}
-                  >
-                    {currentWeather.sunset}
-                  </p>
-                </div>
+                  {currentWeather.sunrise}
+                </p>
+              </div>
+              <div className="text-center z-10 relative">
+                <SunsetIcon c={P.tan} />
+                <p className="font-body text-xs mt-1" style={{ color: P.tan }}>
+                  Sunset
+                </p>
+                <p
+                  className="font-body font-semibold text-xs"
+                  style={{ color: P.light }}
+                >
+                  {currentWeather.sunset}
+                </p>
               </div>
             </div>
           </div>
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   );
 }
