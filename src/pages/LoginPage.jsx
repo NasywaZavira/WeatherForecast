@@ -1,24 +1,30 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { apiLogin } from "../service/apiService";
 import WeatherIcon from "../components/WeatherIcon";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const { setUser } = useAuth();
   const navigate = useNavigate();
 
-  function handleLogin(e) {
+  async function handleLogin(e) {
     e.preventDefault();
     setError("");
-    if (!username || !password) {
-      setError("Username dan password wajib diisi.");
-      return;
+    setLoading(true);
+    try {
+      const { user } = await apiLogin({ username, password });
+      setUser(user);
+      navigate("/dashboard", { replace: true });
+    } catch (err) {
+      setError(err.message || "Login gagal.");
+    } finally {
+      setLoading(false);
     }
-    setUser({ username });
-    navigate("/dashboard", { replace: true });
   }
 
   return (

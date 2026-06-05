@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { apiRegister } from "../service/apiService";
 import WeatherIcon from "../components/WeatherIcon";
 
 export default function SignUpPage() {
@@ -10,26 +11,27 @@ export default function SignUpPage() {
   const [confirm, setConfirm] = useState("");
   const [agreed, setAgreed] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const { setUser } = useAuth();
   const navigate = useNavigate();
 
-  function handleSignUp(e) {
+  async function handleSignUp(e) {
     e.preventDefault();
     setError("");
-    if (!username || !email || !password || !confirm) {
-      setError("Semua field wajib diisi.");
-      return;
-    }
     if (password !== confirm) {
       setError("Password tidak cocok.");
       return;
     }
-    if (!agreed) {
-      setError("Kamu harus menyetujui terms and policy.");
-      return;
+    setLoading(true);
+    try {
+      const { user } = await apiRegister({ username, email, password });
+      setUser(user);
+      navigate("/dashboard", { replace: true });
+    } catch (err) {
+      setError(err.message || "Registrasi gagal.");
+    } finally {
+      setLoading(false);
     }
-    setUser({ username });
-    navigate("/dashboard", { replace: true });
   }
 
   const inputCls = "rounded-lg px-4 py-2.5 font-body text-sm outline-none";
