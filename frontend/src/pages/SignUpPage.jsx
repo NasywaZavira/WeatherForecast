@@ -9,7 +9,6 @@ export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
-  const [agreed, setAgreed] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { setUser } = useAuth();
@@ -118,18 +117,7 @@ export default function SignUpPage() {
                 />
               </div>
             ))}
-            <label className="flex items-center gap-2 cursor-pointer mt-1">
-              <input
-                type="checkbox"
-                checked={agreed}
-                onChange={(e) => setAgreed(e.target.checked)}
-                className="w-4 h-4"
-                style={{ accentColor: "#56B988" }}
-              />
-              <span className="font-body text-xs" style={{ color: "#D3BE94" }}>
-                I have read and agree with the terms and policy
-              </span>
-            </label>
+
             {error && (
               <p className="font-body text-xs" style={{ color: "#f87171" }}>
                 {error}
