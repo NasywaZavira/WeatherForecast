@@ -33,13 +33,6 @@ function getDayLabel(unixTimestamp, index) {
 
 // ── 1. Current Weather ───────────────────────────────────────
 
-/**
- * Ambil cuaca saat ini berdasarkan nama kota.
- * Contoh: fetchCurrentWeather('Medan,ID')
- *
- * @param {string} city  - Nama kota, mis. 'Medan,ID'
- * @returns {Promise<object>} Data yang sesuai format currentWeather di UI
- */
 export async function fetchCurrentWeather(city = "Medan,ID") {
   const url = `${BASE_URL}/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${API_KEY}`;
 
@@ -65,15 +58,7 @@ export async function fetchCurrentWeather(city = "Medan,ID") {
   };
 }
 
-// ── 2. Forecast 5 Hari (dan Hourly) ─────────────────────────
 
-/**
- * Ambil forecast 5 hari / 3 jam.
- * Kembalikan: forecast5Day[] dan hourlyForecast[]
- *
- * @param {string} city
- * @returns {Promise<{forecast5Day, hourlyForecast}>}
- */
 export async function fetchForecast(city = "Medan,ID") {
   const url = `${BASE_URL}/data/2.5/forecast?q=${encodeURIComponent(city)}&appid=${API_KEY}`;
 
@@ -118,16 +103,6 @@ export async function fetchForecast(city = "Medan,ID") {
   return { forecast5Day, hourlyForecast };
 }
 
-// ── 3. Air Quality Index (AQI) ───────────────────────────────
-
-/**
- * Ambil AQI berdasarkan koordinat lat/lon.
- * Koordinat Medan: lat=3.5952, lon=98.6722
- *
- * @param {number} lat
- * @param {number} lon
- * @returns {Promise<{aqi, aqiLabel}>}
- */
 export async function fetchAQI(lat = 3.5952, lon = 98.6722) {
   const url = `${BASE_URL}/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
 
@@ -147,16 +122,6 @@ export async function fetchAQI(lat = 3.5952, lon = 98.6722) {
   };
 }
 
-// ── 4. UV Index (One Call API — butuh subscribe "One Call 3.0") ──
-
-/**
- * Ambil UV index, rain probability, dan moon phase.
- * Membutuhkan One Call API 3.0 (subscribe gratis tapi perlu kartu kredit).
- * Alternatif: pakai nilai fallback jika tidak ada akses.
- *
- * @param {number} lat
- * @param {number} lon
- */
 export async function fetchOneCall(lat = 3.5952, lon = 98.6722) {
   const url = `${BASE_URL}/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&appid=${API_KEY}&units=metric`;
 
@@ -194,16 +159,7 @@ export async function fetchOneCall(lat = 3.5952, lon = 98.6722) {
   };
 }
 
-// ── 5. Fungsi Utama: Ambil Semua Data Sekaligus ──────────────
 
-/**
- * Ambil semua data cuaca yang dibutuhkan dashboard.
- *
- * @param {string} city  - Nama kota
- * @param {number} lat   - Latitude (untuk AQI & UV)
- * @param {number} lon   - Longitude
- * @returns {Promise<{currentWeather, forecast5Day, hourlyForecast}>}
- */
 export async function fetchAllWeatherData(
   city = "Medan,ID",
   lat = 3.5952,
