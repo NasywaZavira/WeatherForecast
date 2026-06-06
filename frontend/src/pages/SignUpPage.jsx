@@ -33,6 +33,11 @@ export default function SignUpPage() {
     }
   }
 
+  function handleGuestLogin() {
+    setUser({ username: "Guest", isGuest: true });
+    navigate("/dashboard", { replace: true });
+  }
+
   const inputCls = "rounded-lg px-4 py-2.5 font-body text-sm outline-none";
 
   return (
@@ -129,6 +134,18 @@ export default function SignUpPage() {
               style={{ background: "#D3BE94", color: "#080704" }}
             >
               Sign Up
+            </button>
+            <button
+              type="button"
+              onClick={handleGuestLogin}
+              className="font-body font-medium py-3 rounded-full transition-all border"
+              style={{
+                color: "#D3BE94",
+                borderColor: "#D3BE94",
+                background: "transparent",
+              }}
+            >
+              Continue as Guest
             </button>
             <p
               className="text-center text-sm font-body"
