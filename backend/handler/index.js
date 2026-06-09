@@ -6,13 +6,20 @@ import cors from 'cors';
 
 const app = express();
 
-// CORS manual: allow semua origin (credentials compatible)
+// CORS: izinkan frontend Vercel & localhost
+const ALLOWED_ORIGINS = [
+  'https://weather-forecast-psi-one.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:3000',
+];
+
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-  // Selalu echo balik origin si pengirim (bukan * karena pakai credentials)
-  res.header('Access-Control-Allow-Origin', origin);
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Vary', 'Origin');
+  if (ALLOWED_ORIGINS.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Vary', 'Origin');
+  }
 
   // Tangani preflight (OPTIONS)
   if (req.method === 'OPTIONS') {
@@ -32,28 +39,23 @@ app.get('/api/health', (req, res) => {
 });
 
 // ─── Lazy-load routes & DB hanya saat ada request ──────────
-// DB & routes cuma di-import pas pertama kali diakses,
-// jadi kalo DB error, health check tetep jalan.
 let initialized = false;
 
 async function ensureInit() {
   if (initialized) return;
-  
+
   try {
-    // Import DB (koneksi)
     await import('../src/config/database.js');
     console.log('[Vercel] DB initialized');
   } catch (e) {
     console.error('[Vercel] DB init failed:', e.message);
   }
 
-  // Import routes
   const authRoutes        = (await import('../src/routes/auth.js')).default;
   const preferencesRoutes = (await import('../src/routes/preferences.js')).default;
   const locationsRoutes   = (await import('../src/routes/locations.js')).default;
   const adminRoutes       = (await import('../src/routes/admin.js')).default;
 
-  // Import rate limiter
   const rateLimit = (await import('express-rate-limit')).default;
 
   const authLimiter = rateLimit({
@@ -84,7 +86,6 @@ async function ensureInit() {
   console.log('[Vercel] Routes & DB ready');
 }
 
-// Middleware: init DB & routes on first API request
 app.use('/api', async (req, res, next) => {
   try {
     await ensureInit();
