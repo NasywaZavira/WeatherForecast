@@ -15,6 +15,16 @@ app.use(cors({
 
 app.use(express.json());
 
+// ─── Tangani OPTIONS preflight SEBELUM middleware lain ────
+// Ini harus ada sebelum route apa pun, termasuk health check
+app.options('/api/*', (req, res) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin || process.env.FRONTEND_URL || 'http://localhost:5173');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.sendStatus(204);
+});
+
 // ─── Health Check (gak butuh DB) ──────────────────────────
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
