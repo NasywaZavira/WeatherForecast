@@ -11,7 +11,9 @@ async function request(method, path, body = null, auth = true) {
     if (token) headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const res = await fetch(`${BASE_URL}${path}`, {
+  const cleanBaseUrl = BASE_URL.endsWith('/') ? BASE_URL.slice(0, -1) : BASE_URL;
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  const res = await fetch(`${cleanBaseUrl}${cleanPath}`, {
     method,
     headers,
     body: body ? JSON.stringify(body) : undefined,
