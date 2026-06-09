@@ -2,12 +2,14 @@
   "name": "weather-forecast-backend",
   "version": "1.0.0",
   "description": "Backend API for Sistem Informasi Ramalan Cuaca",
-  "main": "src/index.js",
   "type": "module",
   "scripts": {
     "dev": "node --watch src/index.js",
     "start": "node src/index.js",
     "migrate": "node src/config/migrate.js"
+  },
+  "engines": {
+    "node": ">=18.x"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

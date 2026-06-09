@@ -70,8 +70,18 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Terjadi kesalahan server yang tidak terduga.' });
 });
 
-// ─── Start ───────────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`[Server] Berjalan di http://localhost:${PORT}`);
-  console.log(`[Env]    NODE_ENV = ${process.env.NODE_ENV || 'development'}`);
-});
+// ─── Export untuk Vercel / Start untuk lokal ─────────────────
+// Vercel serverless → import app; lokal → jalankan server
+// Vercel otomatis set env VERCEL=1 (system environment variable)
+const isVercel = !!process.env.VERCEL;
+
+// Selalu export default app (Vercel serverless butuh ini)
+export default app;
+
+// Hanya listen jika bukan di lingkungan Vercel
+if (!isVercel) {
+  app.listen(PORT, () => {
+    console.log(`[Server] Berjalan di http://localhost:${PORT}`);
+    console.log(`[Env]    NODE_ENV = ${process.env.NODE_ENV || 'development'}`);
+  });
+}
