@@ -72,6 +72,6 @@ The backend exposes a RESTful API with the following main modules:
 | Module | Description |
 |--------|-------------|
 | `/api/auth` | User registration, login, and JWT token management |
-| `/api/weather` | Weather data endpoints, integrated with BMKG API |
+| `/api/weather` | Weather data endpoints, integrated with OpenWeather API |
 | `/api/admin` | Admin management endpoints |
 
