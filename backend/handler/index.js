@@ -5,6 +5,7 @@ import express from 'express';
 import cors from 'cors';
 
 const app = express();
+const apiRouter = express.Router();
 
 // CORS: izinkan frontend Vercel & localhost
 const ALLOWED_ORIGINS = [
@@ -74,13 +75,13 @@ async function ensureInit() {
     legacyHeaders: false,
   });
 
-  app.use('/api/auth', authLimiter);
-  app.use('/api', generalLimiter);
+  apiRouter.use('/auth', authLimiter);
+  apiRouter.use('/', generalLimiter);
 
-  app.use('/api/auth',        authRoutes);
-  app.use('/api/preferences', preferencesRoutes);
-  app.use('/api/locations',   locationsRoutes);
-  app.use('/api/admin',       adminRoutes);
+  apiRouter.use('/auth',        authRoutes);
+  apiRouter.use('/preferences', preferencesRoutes);
+  apiRouter.use('/locations',   locationsRoutes);
+  apiRouter.use('/admin',       adminRoutes);
 
   initialized = true;
   console.log('[Vercel] Routes & DB ready');
@@ -95,6 +96,8 @@ app.use('/api', async (req, res, next) => {
     res.status(500).json({ error: 'Server sedang sibuk. Coba lagi.' });
   }
 });
+
+app.use('/api', apiRouter);
 
 // ─── 404 ─────────────────────────────────────────────────
 app.use((req, res) => {
