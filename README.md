@@ -6,12 +6,6 @@ A full-stack weather forecast information system that provides real-time weather
 
 ---
 
-## 📸 Preview
-
-> Access the live website at the link above to explore the full interface.
-
----
-
 ## ✨ Features
 
 -  **Weather by Location** — Search weather information by city name or use your current location via interactive map (Leaflet.js)
