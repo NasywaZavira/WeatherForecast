@@ -6,24 +6,22 @@ import cors from 'cors';
 
 const app = express();
 
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-}));
-
-app.use(express.json());
-
-// ─── Tangani OPTIONS preflight SEBELUM middleware lain ────
-// Ini harus ada sebelum route apa pun, termasuk health check
-app.options('/api/*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', req.headers.origin || process.env.FRONTEND_URL || 'http://localhost:5173');
+// CORS manual: allow semua origin
+app.use((req, res, next) => {
+  const origin = req.headers.origin || '*';
+  res.header('Access-Control-Allow-Origin', origin);
   res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.header('Access-Control-Allow-Credentials', 'true');
-  res.sendStatus(204);
+
+  // Tangani preflight (OPTIONS)
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  next();
 });
+
+app.use(express.json());
 
 // ─── Health Check (gak butuh DB) ──────────────────────────
 app.get('/api/health', (req, res) => {
