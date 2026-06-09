@@ -6,17 +6,20 @@ import cors from 'cors';
 
 const app = express();
 
-// CORS manual: allow semua origin
+// CORS manual: allow semua origin (credentials compatible)
 app.use((req, res, next) => {
-  const origin = req.headers.origin || '*';
+  const origin = req.headers.origin;
+  // Selalu echo balik origin si pengirim (bukan * karena pakai credentials)
   res.header('Access-Control-Allow-Origin', origin);
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Vary', 'Origin');
 
   // Tangani preflight (OPTIONS)
   if (req.method === 'OPTIONS') {
-    return res.sendStatus(204);
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Max-Age', '86400');
+    return res.status(204).end();
   }
   next();
 });
